@@ -77,6 +77,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic) AVCaptureDeviceInput *videoDeviceInput;
 @property (nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 @property (nonatomic) AVCaptureStillImageOutput *stillImageOutput;
+@property (nonatomic) NSURL *outputFileURL;
 
 // Utilities.
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundRecordingID;
@@ -102,7 +103,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	
+
+
+  NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent: [@"movie" stringByAppendingPathExtension: @"mov"]];
+  self.outputFileURL = [NSURL fileURLWithPath: outputFilePath];
+
 	// Create the AVCaptureSession
 	AVCaptureSession *session = [[AVCaptureSession alloc] init];
 	[self setSession:session];
@@ -315,8 +320,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			[AVCamViewController setFlashMode:AVCaptureFlashModeOff forDevice:[[self videoDeviceInput] device]];
 			
 			// Start recording to a temporary file.
-			NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie" stringByAppendingPathExtension:@"mov"]];
-			[[self movieFileOutput] startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+			// NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[@"movie" stringByAppendingPathExtension:@"mov"]];
+      [[self movieFileOutput] startRecordingToOutputFileURL: self.outputFileURL
+                                          recordingDelegate: self];
 		}
 		else
 		{
@@ -407,13 +413,17 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   // Email Content
   NSString *messageBody = @"iOS programming is so fun!";
   // To address
-  NSArray *toRecipents = [NSArray arrayWithObject: @"support@appcoda.com"];
+  NSArray *toRecipents = [NSArray arrayWithObject: @"kanaya@pineapple.cc"];
 
   MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
   mc.mailComposeDelegate = self;
   [mc setSubject: emailTitle];
   [mc setMessageBody: messageBody isHTML: NO];
   [mc setToRecipients: toRecipents];
+
+  [mc addAttachmentData: [NSData dataWithContentsOfURL: self.outputFileURL] // exist?
+               mimeType: @"video/quicktime"
+               fileName: @"Movie"];
 
   // Present mail view controller on screen
   [self presentViewController: mc animated: YES completion: NULL];
@@ -464,6 +474,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		NSLog(@"%@", error);
 	
 	[self setLockInterfaceRotation:NO];
+
+  [self snapStillImage: self];
 	
 	// Note the backgroundRecordingID for use in the ALAssetsLibrary completion handler to end the background task associated with this recording. This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's -isRecording is back to NO — which happens sometime after this method returns.
 	UIBackgroundTaskIdentifier backgroundRecordingID = [self backgroundRecordingID];
