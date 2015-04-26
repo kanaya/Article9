@@ -45,6 +45,8 @@
  
  */
 
+#import <MessageUI/MessageUI.h>
+
 #import "AVCamViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -56,7 +58,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * RecordingContext = &RecordingContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface AVCamViewController () <AVCaptureFileOutputRecordingDelegate>
+@interface AVCamViewController () <AVCaptureFileOutputRecordingDelegate, MFMailComposeViewControllerDelegate>
 
 // For use in the storyboards.
 @property (nonatomic, weak) IBOutlet AVCamPreviewView *previewView;
@@ -378,8 +380,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	});
 }
 
-- (IBAction)snapStillImage:(id)sender
+- (IBAction)snapStillImage: (id)sender
 {
+#if 0
 	dispatch_async([self sessionQueue], ^{
 		// Update the orientation on the still image output video connection before capturing.
 		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
@@ -398,6 +401,47 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			}
 		}];
 	});
+#else
+  // Email Subject
+  NSString *emailTitle = @"Test Email";
+  // Email Content
+  NSString *messageBody = @"iOS programming is so fun!";
+  // To address
+  NSArray *toRecipents = [NSArray arrayWithObject: @"support@appcoda.com"];
+
+  MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+  mc.mailComposeDelegate = self;
+  [mc setSubject: emailTitle];
+  [mc setMessageBody: messageBody isHTML: NO];
+  [mc setToRecipients: toRecipents];
+
+  // Present mail view controller on screen
+  [self presentViewController: mc animated: YES completion: NULL];
+#endif
+}
+
+- (void)mailComposeController: (MFMailComposeViewController *)controller didFinishWithResult: (MFMailComposeResult)result error: (NSError *)error
+{
+  switch (result)
+  {
+    case MFMailComposeResultCancelled:
+      NSLog(@"Mail cancelled");
+      break;
+    case MFMailComposeResultSaved:
+      NSLog(@"Mail saved");
+      break;
+    case MFMailComposeResultSent:
+      NSLog(@"Mail sent");
+      break;
+    case MFMailComposeResultFailed:
+      NSLog(@"Mail sent failure: %@", [error localizedDescription]);
+      break;
+    default:
+      break;
+  }
+
+  // Close the Mail Interface
+  [self dismissViewControllerAnimated: YES completion: NULL];
 }
 
 - (IBAction)focusAndExposeTap:(UIGestureRecognizer *)gestureRecognizer
