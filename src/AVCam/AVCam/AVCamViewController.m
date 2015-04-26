@@ -123,7 +123,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		
 		NSError *error = nil;
 		
-		AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:AVCaptureDevicePositionBack];
+		AVCaptureDevice *videoDevice = [AVCamViewController deviceWithMediaType: AVMediaTypeVideo preferringPosition: AVCaptureDevicePositionFront];
 		AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
 		
 		if (error)
