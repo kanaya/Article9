@@ -413,7 +413,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   // Email Content
   NSString *messageBody = @"iOS programming is so fun!";
   // To address
-  NSArray *toRecipents = [NSArray arrayWithObject: @"kanaya@pineapple.cc"];
+  NSArray *toRecipents = [NSArray arrayWithObject: @"article9japan@gmail.com"];
 
   MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
   mc.mailComposeDelegate = self;
