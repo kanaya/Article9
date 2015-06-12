@@ -15,6 +15,7 @@
 		2F45C1D5177676670052A7F9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F360BB717692C4700D9A404 /* Main_iPhone.storyboard */; };
 		2F45C1D6177676670052A7F9 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F360BBA17692C4700D9A404 /* Main_iPad.storyboard */; };
 		2FDA781D176DB79700509279 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA781C176DB79700509279 /* AVCamPreviewView.m */; };
+		BFB1FFB61B298D2000587EF9 /* A9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BFB1FFB51B298D2000587EF9 /* A9.jpg */; };
 		BFDC35351AEC7F9B0021F017 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFDC35341AEC7F9B0021F017 /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		2F90F0AD178E8C450015CE45 /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		2FDA781B176DB79700509279 /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
 		2FDA781C176DB79700509279 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
+		BFB1FFB51B298D2000587EF9 /* A9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = A9.jpg; sourceTree = "<group>"; };
 		BFDC35341AEC7F9B0021F017 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 		2F360BAB17692C4700D9A404 /* AVCam */ = {
 			isa = PBXGroup;
 			children = (
+				BFB1FFB51B298D2000587EF9 /* A9.jpg */,
 				2F360BB417692C4700D9A404 /* AVCamAppDelegate.h */,
 				2F360BB517692C4700D9A404 /* AVCamAppDelegate.m */,
 				2F360BBD17692C4700D9A404 /* AVCamViewController.h */,
@@ -155,6 +158,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFB1FFB61B298D2000587EF9 /* A9.jpg in Resources */,
 				2F360BC117692C4700D9A404 /* Images.xcassets in Resources */,
 				2F360BB017692C4700D9A404 /* InfoPlist.strings in Resources */,
 				2F45C1D5177676670052A7F9 /* Main_iPhone.storyboard in Resources */,

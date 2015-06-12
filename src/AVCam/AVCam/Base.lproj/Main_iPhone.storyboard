@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <development version="5000" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Cam View Controller-->
@@ -17,67 +17,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sVI-mX-69Q" customClass="AVCamPreviewView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghq-cJ-efm">
-                                        <rect key="frame" x="32" y="516" width="72" height="30"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="72" id="QMd-IJ-21V"/>
-                                            <constraint firstAttribute="height" constant="30" id="n1T-X2-T2s"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Record">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="toggleMovieRecording:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2wa-Oy-RfQ"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JI8-7Z-lWW">
-                                        <rect key="frame" x="124" y="516" width="72" height="30"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="72" id="Omq-Uf-Bqn"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Still">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="snapStillImage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="mhO-gK-EhH"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f4y-iM-g40">
-                                        <rect key="frame" x="216" y="516" width="72" height="30"/>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="72" id="SJq-FL-CMd"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <state key="normal" title="Camera">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="changeCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2Lf-Vl-wCY"/>
-                                        </connections>
-                                    </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="A9.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="5cU-tn-1G0">
-                                        <rect key="frame" x="40" y="8" width="240" height="340"/>
-                                    </imageView>
-                                </subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="A9.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="5cU-tn-1G0">
+                                <rect key="frame" x="2" y="75" width="317" height="417"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="417" id="DrT-nw-yS7"/>
+                                    <constraint firstAttribute="width" constant="317" id="QYN-b6-vBJ"/>
+                                    <constraint firstAttribute="width" secondItem="5cU-tn-1G0" secondAttribute="height" multiplier="317:417" id="rGf-DL-NJ4"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghq-cJ-efm">
+                                <rect key="frame" x="124" y="512" width="72" height="36"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="72" id="QMd-IJ-21V"/>
+                                    <constraint firstAttribute="height" constant="30" id="n1T-X2-T2s"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Record">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleMovieRecording:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2wa-Oy-RfQ"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sVI-mX-69Q" customClass="AVCamPreviewView">
+                                <rect key="frame" x="148" y="20" width="24" height="44"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstItem="f4y-iM-g40" firstAttribute="leading" secondItem="JI8-7Z-lWW" secondAttribute="trailing" constant="20" id="J5d-28-gQu"/>
-                                    <constraint firstItem="f4y-iM-g40" firstAttribute="top" secondItem="JI8-7Z-lWW" secondAttribute="top" id="U8i-I9-VGr"/>
-                                    <constraint firstItem="JI8-7Z-lWW" firstAttribute="centerX" secondItem="sVI-mX-69Q" secondAttribute="centerX" id="UyF-Rc-Hv7"/>
-                                    <constraint firstItem="f4y-iM-g40" firstAttribute="bottom" secondItem="JI8-7Z-lWW" secondAttribute="bottom" id="a5K-7u-eYq"/>
-                                    <constraint firstItem="JI8-7Z-lWW" firstAttribute="top" secondItem="ghq-cJ-efm" secondAttribute="top" id="fzH-Hp-kfD"/>
-                                    <constraint firstItem="ghq-cJ-efm" firstAttribute="bottom" secondItem="JI8-7Z-lWW" secondAttribute="bottom" id="na8-gc-EOH"/>
-                                    <constraint firstAttribute="bottom" secondItem="ghq-cJ-efm" secondAttribute="bottom" constant="22" id="uI3-5b-tr1"/>
-                                    <constraint firstItem="JI8-7Z-lWW" firstAttribute="leading" secondItem="ghq-cJ-efm" secondAttribute="trailing" constant="20" id="ulh-Qv-HqE"/>
+                                    <constraint firstAttribute="height" constant="44" id="JqH-6P-oxG"/>
+                                    <constraint firstAttribute="width" secondItem="sVI-mX-69Q" secondAttribute="height" multiplier="6:11" id="LxE-xg-IAE"/>
+                                    <constraint firstAttribute="width" constant="24" id="kUw-TJ-sFl"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="ONs-ko-ZrA" appends="YES" id="c3S-iC-ZUa"/>
@@ -87,18 +57,17 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="sVI-mX-69Q" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="6xD-bE-j4m"/>
-                            <constraint firstAttribute="trailing" secondItem="sVI-mX-69Q" secondAttribute="trailing" id="KGF-Kd-1cs"/>
-                            <constraint firstItem="sVI-mX-69Q" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="ZvV-TN-BSN"/>
-                            <constraint firstAttribute="bottom" secondItem="sVI-mX-69Q" secondAttribute="bottom" id="p9I-6Q-AID"/>
+                            <constraint firstAttribute="centerX" secondItem="5cU-tn-1G0" secondAttribute="centerX" id="7hR-68-W7B"/>
+                            <constraint firstAttribute="centerX" secondItem="ghq-cJ-efm" secondAttribute="centerX" id="Dqz-Bl-6na"/>
+                            <constraint firstAttribute="centerX" secondItem="sVI-mX-69Q" secondAttribute="centerX" id="HNC-9T-BOr"/>
+                            <constraint firstAttribute="centerY" secondItem="5cU-tn-1G0" secondAttribute="centerY" id="Jhs-9m-3dY"/>
+                            <constraint firstItem="tvj-7s-n29" firstAttribute="top" secondItem="ghq-cJ-efm" secondAttribute="bottom" constant="20" id="N1J-CR-6l1"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
-                        <outlet property="cameraButton" destination="f4y-iM-g40" id="UG1-1g-xMf"/>
                         <outlet property="previewView" destination="sVI-mX-69Q" id="UGh-um-teZ"/>
                         <outlet property="recordButton" destination="ghq-cJ-efm" id="Tcb-VB-crw"/>
-                        <outlet property="stillButton" destination="JI8-7Z-lWW" id="oT3-f6-Uvt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
