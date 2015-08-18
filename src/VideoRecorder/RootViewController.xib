@@ -43,15 +43,12 @@
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView"/>
-				<object class="NSColor" key="IBUIBackgroundColor">
+				<object class="NSColor" key="IBUIBackgroundColor" id="924950246">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
-						<int key="NSID">2</int>
-					</object>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics" id="278508817">
+				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics" id="849313767">
 					<string key="IBUISimulatedSizeMetricsClass">IBUISimulatedFreeformSizeMetricsSentinel</string>
 					<string key="IBUIDisplayName">Freeform</string>
 				</object>
@@ -76,10 +73,7 @@
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="924950246">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-						</object>
+						<reference key="IBUIHighlightedTitleColor" ref="924950246"/>
 						<object class="NSColor" key="IBUINormalTitleShadowColor" id="1046437721">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
@@ -227,7 +221,7 @@
 						<string key="NSFrame">{{247, 15}, {35, 26}}</string>
 						<reference key="NSSuperview" ref="1061465345"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="844546369"/>
+						<reference key="NSNextKeyView" ref="546639803"/>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
@@ -235,13 +229,29 @@
 							<string key="NSResourceName">record-indicator.png</string>
 						</object>
 					</object>
-					<object class="IBUIImageView" id="844546369">
+					<object class="IBUIImageView" id="773407987">
 						<reference key="NSNextResponder" ref="1061465345"/>
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, 80}, {320, 320}}</string>
 						<reference key="NSSuperview" ref="1061465345"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="861920764"/>
+						<string key="NSHuggingPriority">{251, 251}</string>
+						<float key="IBUIAlpha">0.5</float>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">article9darkener.png</string>
+						</object>
+					</object>
+					<object class="IBUIImageView" id="546639803">
+						<reference key="NSNextResponder" ref="1061465345"/>
+						<int key="NSvFlags">274</int>
+						<string key="NSFrame">{{0, 80}, {320, 320}}</string>
+						<reference key="NSSuperview" ref="1061465345"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="773407987"/>
 						<string key="NSHuggingPriority">{251, 251}</string>
 						<int key="IBUIContentMode">1</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -258,7 +268,7 @@
 				<reference key="NSNextKeyView" ref="819250342"/>
 				<reference key="IBUIBackgroundColor" ref="191928044"/>
 				<bool key="IBUIOpaque">NO</bool>
-				<reference key="IBUISimulatedDestinationMetrics" ref="278508817"/>
+				<reference key="IBUISimulatedDestinationMetrics" ref="849313767"/>
 				<object class="IBUIAccessibilityConfiguration" key="IBUIAccessibilityConfiguration">
 					<string key="IBUIAccessibilityLabel">OverlayView</string>
 				</object>
@@ -372,7 +382,8 @@
 							<reference ref="855997848"/>
 							<reference ref="1044297383"/>
 							<reference ref="176361943"/>
-							<reference ref="844546369"/>
+							<reference ref="546639803"/>
+							<reference ref="773407987"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Camera Overlay View</string>
@@ -430,7 +441,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">51</int>
-						<reference key="object" ref="844546369"/>
+						<reference key="object" ref="546639803"/>
+						<reference key="parent" ref="1061465345"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">52</int>
+						<reference key="object" ref="773407987"/>
 						<reference key="parent" ref="1061465345"/>
 					</object>
 				</array>
@@ -453,12 +469,13 @@
 				<string key="42.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="46.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="51.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="52.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">51</int>
+			<int key="maxID">52</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -617,6 +634,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="article9darkener.png">{2000, 2000}</string>
 			<string key="article9white.png">{2000, 2000}</string>
 			<string key="camera-toggle-pressed.png">{120, 62}</string>
 			<string key="camera-toggle.png">{120, 62}</string>
