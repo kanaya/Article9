@@ -70,6 +70,7 @@
     cameraSelectionButton.alpha = 0.0;
     flashModeButton.alpha = 0.0;
     recordIndicatorView.alpha = 0.0;
+    videoQualitySelectionButton.alpha = 0.0;
     
     [self createImagePicker];
     
@@ -158,10 +159,10 @@
 - (void)changeVideoQuality:(id)sender {
     if (imagePicker.videoQuality == UIImagePickerControllerQualityType640x480) {
         imagePicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
-        [videoQualitySelectionButton setImage:[UIImage imageNamed:@"hd-selected.png"] forState:UIControlStateNormal];
+        // [videoQualitySelectionButton setImage:[UIImage imageNamed:@"hd-selected.png"] forState:UIControlStateNormal];
     } else {
         imagePicker.videoQuality = UIImagePickerControllerQualityType640x480;
-        [videoQualitySelectionButton setImage:[UIImage imageNamed:@"sd-selected.png"] forState:UIControlStateNormal];
+        // [videoQualitySelectionButton setImage:[UIImage imageNamed:@"sd-selected.png"] forState:UIControlStateNormal];
     }
 }
 
@@ -197,7 +198,7 @@
     hideControls = ^(void) {
         cameraSelectionButton.alpha = 0;
         flashModeButton.alpha = 0;
-        videoQualitySelectionButton.alpha = 0;
+        // videoQualitySelectionButton.alpha = 0;
         recordIndicatorView.alpha = 1.0;
     };
 
@@ -233,7 +234,7 @@
     showControls = ^(void) {
         if (showCameraSelection) cameraSelectionButton.alpha = 1.0;
         if (showFlashMode) flashModeButton.alpha = 1.0;
-        videoQualitySelectionButton.alpha = 1.0;
+        // videoQualitySelectionButton.alpha = 1.0;
         recordIndicatorView.alpha = 0.0;
     };
 

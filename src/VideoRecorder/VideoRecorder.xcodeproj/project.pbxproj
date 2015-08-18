@@ -16,6 +16,7 @@
 		28C286E10D94DF7D0034E888 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.m */; };
 		28F335F11007B36200424DE2 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* RootViewController.xib */; };
 		2BFA572316320475007DD249 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BFA572216320475007DD249 /* Default-568h@2x.png */; };
+		BF3B2F5C1B8321FC00AC70FD /* article9white.png in Resources */ = {isa = PBXBuildFile; fileRef = BF3B2F5B1B8321FC00AC70FD /* article9white.png */; };
 		CC00DFC211BA28DC00C59FA7 /* camera-toggle-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = CC00DFBC11BA28DC00C59FA7 /* camera-toggle-pressed.png */; };
 		CC00DFC311BA28DC00C59FA7 /* camera-toggle.png in Resources */ = {isa = PBXBuildFile; fileRef = CC00DFBD11BA28DC00C59FA7 /* camera-toggle.png */; };
 		CC00DFC411BA28DC00C59FA7 /* flash-off.png in Resources */ = {isa = PBXBuildFile; fileRef = CC00DFBE11BA28DC00C59FA7 /* flash-off.png */; };
@@ -42,6 +43,7 @@
 		2B32172217B46E190037975F /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		2BFA572216320475007DD249 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* VideoRecorder-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "VideoRecorder-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		BF3B2F5B1B8321FC00AC70FD /* article9white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = article9white.png; sourceTree = "<group>"; };
 		CC00DFBC11BA28DC00C59FA7 /* camera-toggle-pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "camera-toggle-pressed.png"; path = "Resources/camera-toggle-pressed.png"; sourceTree = "<group>"; };
 		CC00DFBD11BA28DC00C59FA7 /* camera-toggle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "camera-toggle.png"; path = "Resources/camera-toggle.png"; sourceTree = "<group>"; };
 		CC00DFBE11BA28DC00C59FA7 /* flash-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "flash-off.png"; path = "Resources/flash-off.png"; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				BF3B2F5B1B8321FC00AC70FD /* article9white.png */,
 				CC22C2AC11BAF605002008BE /* Icon.png */,
 				CC00E0F411BA3AC200C59FA7 /* record-indicator.png */,
 				CC00DFBC11BA28DC00C59FA7 /* camera-toggle-pressed.png */,
@@ -195,6 +198,7 @@
 				CC00DFC311BA28DC00C59FA7 /* camera-toggle.png in Resources */,
 				CC00DFC411BA28DC00C59FA7 /* flash-off.png in Resources */,
 				CC00DFC511BA28DC00C59FA7 /* flash-on.png in Resources */,
+				BF3B2F5C1B8321FC00AC70FD /* article9white.png in Resources */,
 				CC00DFC611BA28DC00C59FA7 /* hd-selected.png in Resources */,
 				CC00DFC711BA28DC00C59FA7 /* sd-selected.png in Resources */,
 				CC00E0F511BA3AC200C59FA7 /* record-indicator.png in Resources */,
