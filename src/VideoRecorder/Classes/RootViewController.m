@@ -45,9 +45,10 @@
   
 */
 
+#import <MessageUI/MessageUI.h>
 #import "RootViewController.h"
 
-@interface RootViewController ()
+@interface RootViewController () <MFMailComposeViewControllerDelegate>
 - (void)changeVideoQuality:(id)sender;
 - (void)changeFlashMode:(id)sender;
 - (void)changeCamera:(id)sender;
@@ -65,19 +66,18 @@
 #pragma mark View lifecycle
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+  [super viewDidLoad];
+  cameraSelectionButton.alpha = 0.0;
+  flashModeButton.alpha = 0.0;
+  recordIndicatorView.alpha = 0.0;
+  videoQualitySelectionButton.alpha = 0.0;
     
-    cameraSelectionButton.alpha = 0.0;
-    flashModeButton.alpha = 0.0;
-    recordIndicatorView.alpha = 0.0;
-    videoQualitySelectionButton.alpha = 0.0;
+  [self createImagePicker];
     
-    [self createImagePicker];
+  recordGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoRecording)];
+  recordGestureRecognizer.numberOfTapsRequired = 2;
     
-    recordGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoRecording)];
-    recordGestureRecognizer.numberOfTapsRequired = 2;
-    
-    [cameraOverlayView addGestureRecognizer:recordGestureRecognizer];
+  [cameraOverlayView addGestureRecognizer:recordGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -147,13 +147,14 @@
 
 
 - (void)toggleVideoRecording {
-    if (!recording) {
-        recording = YES;
-        [self startRecording];
-    } else {
-        recording = NO;
-        [self stopRecording];
-    }
+  if (!recording) {
+    recording = YES;
+    [self startRecording];
+  }
+  else {
+    recording = NO;
+    [self stopRecording];
+  }
 }
 
 - (void)changeVideoQuality:(id)sender {
@@ -215,17 +216,32 @@
     [imagePicker stopVideoCapture];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    NSURL *videoURL = [info valueForKey:UIImagePickerControllerMediaURL];
-    NSString *pathToVideo = [videoURL path];
-    BOOL okToSaveVideo = UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(pathToVideo);
-    if (okToSaveVideo) {
-        UISaveVideoAtPathToSavedPhotosAlbum(pathToVideo, self, @selector(video:didFinishSavingWithError:contextInfo:), NULL);
-    } else {
-        [self video:pathToVideo didFinishSavingWithError:nil contextInfo:NULL];
-    }
-    
+- (void)imagePickerController: (UIImagePickerController *)picker didFinishPickingMediaWithInfo: (NSDictionary *)info {
+  NSURL *videoURL = [info valueForKey: UIImagePickerControllerMediaURL];
+  NSString *pathToVideo = [videoURL path];
+  BOOL okToSaveVideo = UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(pathToVideo);
+  if (okToSaveVideo) {
+    UISaveVideoAtPathToSavedPhotosAlbum(pathToVideo, self, @selector(video: didFinishSavingWithError: contextInfo:), NULL);
+  }
+  else {
+    [self video: pathToVideo didFinishSavingWithError: nil contextInfo: NULL];
+  }
+  // do something
+  NSData *dataToSend = [NSData dataWithContentsOfFile: pathToVideo];
+  NSString *emailTitle = @"Article 9";
+  NSString *messageBody = @"Thank you for sending your video message. -- Article 9 Project";
+  NSArray *toRecipents = [NSArray arrayWithObject: @"article9japan@gmail.com"];
+  MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+  mc.mailComposeDelegate = self;
+  [mc setSubject: emailTitle];
+  [mc setMessageBody: messageBody isHTML: NO];
+  [mc setToRecipients: toRecipents];
+  [mc addAttachmentData: dataToSend
+               mimeType: @"video/quicktime"
+               fileName: @"Movie"];
+  [imagePicker presentViewController: mc
+                            animated: YES
+                          completion: NULL];
 }
 
 - (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
@@ -240,6 +256,26 @@
 
     // Show controls
     [UIView  animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:showControls completion:NULL];
-
 }
+
+- (void)mailComposeController: (MFMailComposeViewController *)controller didFinishWithResult: (MFMailComposeResult)result error: (NSError *)error {
+  switch (result) {
+    case MFMailComposeResultCancelled:
+      NSLog(@"Mail cancelled");
+      break;
+    case MFMailComposeResultSaved:
+      NSLog(@"Mail saved");
+      break;
+    case MFMailComposeResultSent:
+      NSLog(@"Mail sent");
+      break;
+    case MFMailComposeResultFailed:
+      NSLog(@"Mail sent failure: %@", [error localizedDescription]);
+      break;
+    default:
+      break;
+  }
+  [self dismissViewControllerAnimated: YES completion: NULL];
+}
+
 @end

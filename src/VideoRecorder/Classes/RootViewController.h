@@ -47,7 +47,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RootViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate> {    
+@interface RootViewController: UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate> {    
     IBOutlet UIButton *cameraSelectionButton;
     IBOutlet UIButton *flashModeButton;
     IBOutlet UIButton *videoQualitySelectionButton;
