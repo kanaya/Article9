@@ -90,6 +90,199 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @implementation AVCamViewController
 
+// Thanks to http://stackoverflow.com/questions/29607943/how-to-compress-a-video-to-accurate-size-in-objective-c
+- (void)convertVideoToLowQuailtyWithInputURL: (NSURL*)inputURL outputURL: (NSURL*)outputURL handler: (void (^)(AVAssetExportSession*))handler {
+  [[NSFileManager defaultManager] removeItemAtURL: outputURL error: nil];
+  AVURLAsset *asset = [AVURLAsset URLAssetWithURL: inputURL options: nil];
+
+  AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset: asset
+                                                                         presetName: AVAssetExportPresetMediumQuality];
+  exportSession.outputURL = outputURL;
+  exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+  [exportSession exportAsynchronouslyWithCompletionHandler: ^(void) { handler(exportSession); }];
+}
+
+
+// not in use
+-(void)resizeVideoFrom: (NSURL *)src to: (NSURL *)dst {
+  NSError *error = nil;
+
+  AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL: dst
+                                                         fileType: AVFileTypeQuickTimeMovie
+                                                            error: &error];
+  NSParameterAssert(videoWriter);
+
+  AVAsset *avAsset = [[AVURLAsset alloc] initWithURL: src
+                                             options: nil];
+
+  NSDictionary *videoCleanApertureSettings = @{ AVVideoCleanApertureWidthKey: @1080,
+                                                AVVideoCleanApertureHeightKey: @1920,
+                                                AVVideoCleanApertureHorizontalOffsetKey: @10,
+                                                AVVideoCleanApertureVerticalOffsetKey: @10 };
+  NSDictionary *codecSettings              = @{ AVVideoAverageBitRateKey: @1960000,
+                                                AVVideoMaxKeyFrameIntervalKey: @24,
+                                                AVVideoCleanApertureKey: videoCleanApertureSettings };
+  NSDictionary *videoCompressionSettings   = @{ AVVideoCodecKey: AVVideoCodecH264,
+                                                AVVideoCompressionPropertiesKey: codecSettings,
+                                                AVVideoWidthKey: @360,
+                                                AVVideoHeightKey: @640 };
+  AVAssetWriterInput *videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType: AVMediaTypeVideo
+                                                                            outputSettings: videoCompressionSettings];
+
+  NSParameterAssert(videoWriterInput);
+  NSParameterAssert([videoWriter canAddInput: videoWriterInput]);
+
+  videoWriterInput.expectsMediaDataInRealTime = NO;  // YES
+  [videoWriter addInput: videoWriterInput];
+
+  NSError *aerror = nil;
+  AVAssetReader *reader = [[AVAssetReader alloc] initWithAsset: avAsset
+                                                         error: &aerror];
+  AVAssetTrack *videoTrack = [[avAsset tracksWithMediaType: AVMediaTypeVideo] objectAtIndex: 0];
+
+  videoWriterInput.transform = videoTrack.preferredTransform;
+
+  NSDictionary *videoOptions = @{ (id)kCVPixelBufferPixelFormatTypeKey: [NSNumber numberWithInt: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] };
+  AVAssetReaderTrackOutput *asset_reader_output = [[AVAssetReaderTrackOutput alloc] initWithTrack: videoTrack
+                                                                                   outputSettings: videoOptions];
+  [reader addOutput: asset_reader_output];
+
+  //audio setup
+  AVAssetWriterInput* audioWriterInput = [AVAssetWriterInput
+                                          assetWriterInputWithMediaType: AVMediaTypeAudio
+                                          outputSettings: nil];
+
+
+  AVAssetReader *audioReader = [AVAssetReader assetReaderWithAsset: avAsset
+                                                             error: &error];
+  AVAssetTrack* audioTrack = [[avAsset tracksWithMediaType: AVMediaTypeAudio] objectAtIndex: 0];
+  AVAssetReaderOutput *readerOutput = [AVAssetReaderTrackOutput assetReaderTrackOutputWithTrack: audioTrack
+                                                                                 outputSettings: nil];
+  [audioReader addOutput: readerOutput];
+  NSParameterAssert(audioWriterInput);
+  NSParameterAssert([videoWriter canAddInput: audioWriterInput]);
+  audioWriterInput.expectsMediaDataInRealTime = NO;
+  [videoWriter addInput: audioWriterInput];
+
+  [videoWriter startWriting];
+  [videoWriter startSessionAtSourceTime: kCMTimeZero];
+  [reader startReading];
+  dispatch_queue_t _processingQueue = dispatch_queue_create("assetAudioWriterQueue", NULL);
+  [videoWriterInput requestMediaDataWhenReadyOnQueue: _processingQueue
+                                          usingBlock:
+   ^{
+     while ([videoWriterInput isReadyForMoreMediaData]) {
+       CMSampleBufferRef sampleBuffer;
+       if ([reader status] == AVAssetReaderStatusReading) {
+         if(![videoWriterInput isReadyForMoreMediaData])
+           continue;
+         sampleBuffer = [asset_reader_output copyNextSampleBuffer];
+         // NSLog(@"READING");
+         if(sampleBuffer)
+           [videoWriterInput appendSampleBuffer:sampleBuffer];
+         // NSLog(@"WRITTING...");
+       }
+       else {
+         [videoWriterInput markAsFinished];
+         switch ([reader status]) {
+           case AVAssetReaderStatusReading:
+             // the reader has more for other tracks, even if this one is done
+             break;
+           case AVAssetReaderStatusCompleted:
+             // your method for when the conversion is done
+             // should call finishWriting on the writer
+             //hook up audio track
+           {
+             NSString *path = dst.path;
+             NSData *data = [[NSFileManager defaultManager] contentsAtPath: path];
+             NSLog(@"size after compress video is %u", (unsigned)data.length);
+             [videoWriter startSessionAtSourceTime: kCMTimeZero];
+             break;
+           }
+           case AVAssetReaderStatusFailed:
+           {
+             [videoWriter cancelWriting];
+             break;
+           }
+           default:
+             break;
+         }
+         break;
+       }
+     }
+/*
+     // begin
+     while ([videoWriterInput isReadyForMoreMediaData]) {
+
+       CMSampleBufferRef sampleBuffer;
+       if ([reader status] == AVAssetReaderStatusReading && (sampleBuffer = [asset_reader_output copyNextSampleBuffer])) {
+         BOOL result = [videoWriterInput appendSampleBuffer: sampleBuffer];
+         CFRelease(sampleBuffer);
+
+         if (!result) {
+           // PROBLEM SEEMS TO BE HERE... result is getting false value....
+           [reader cancelReading];
+           NSLog(@"NO RESULT");
+           NSLog(@"videoWriter.error: %@", videoWriter.error);
+           break;
+         }
+       }
+       else {
+         [videoWriterInput markAsFinished];
+
+         switch ([reader status]) {
+           case AVAssetReaderStatusReading:
+             // the reader has more for other tracks, even if this one is done
+             break;
+
+           case AVAssetReaderStatusCompleted:
+             // your method for when the conversion is done
+             // should call finishWriting on the writer
+             //hook up audio track
+             [audioReader startReading];
+             [videoWriter startSessionAtSourceTime: kCMTimeZero];
+             // dispatch_queue_t mediaInputQueue = dispatch_queue_create("mediaInputQueue", NULL);
+             // [audioWriterInput requestMediaDataWhenReadyOnQueue:mediaInputQueue usingBlock:^
+             //{
+             NSLog(@"Request");
+             NSLog(@"Asset Writer ready :%d", audioWriterInput.readyForMoreMediaData);
+             while (audioWriterInput.readyForMoreMediaData) {
+               CMSampleBufferRef nextBuffer;
+               if ([audioReader status] == AVAssetReaderStatusReading && (nextBuffer = [readerOutput copyNextSampleBuffer])) {
+                 NSLog(@"Ready");
+                 if (nextBuffer) {
+                   NSLog(@"NextBuffer");
+                   [audioWriterInput appendSampleBuffer: nextBuffer];
+                 }
+               }
+               else {
+                 [audioWriterInput markAsFinished];
+                 switch ([audioReader status]) {
+                   case AVAssetReaderStatusCompleted:
+                     [videoWriter finishWriting];
+                     NSLog(@"setting  final... the URL");
+                     // self.finalURL = [[NSURL alloc] initFileURLWithPath: newName];  // ADD finalURL to self!!
+                     break;
+                 }
+               }
+             }
+             break;
+
+           case AVAssetReaderStatusFailed:
+             [videoWriter cancelWriting];
+             break;
+         }
+         break;
+       }
+     }
+     // end
+ */
+   }
+   ];
+  NSLog(@"Write Ended");
+}
+
+
 - (BOOL)isSessionRunningAndDeviceAuthorized
 {
 	return [[self session] isRunning] && [self isDeviceAuthorized];
@@ -150,6 +343,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   
 				[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] setVideoOrientation:(AVCaptureVideoOrientation)[self interfaceOrientation]];
 			});
+
 		}
 		
 		AVCaptureDevice *audioDevice = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio] firstObject];
@@ -231,7 +425,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	return ![self lockInterfaceRotation];
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskAll;
 }
@@ -386,32 +580,30 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	});
 }
 
-- (IBAction)snapStillImage: (id)sender
-{
-#if 0
-	dispatch_async([self sessionQueue], ^{
-		// Update the orientation on the still image output video connection before capturing.
-		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
-		
-		// Flash set to Auto for Still Capture
-		[AVCamViewController setFlashMode:AVCaptureFlashModeAuto forDevice:[[self videoDeviceInput] device]];
-		
-		// Capture a still image.
-		[[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-			
-			if (imageDataSampleBuffer)
-			{
-				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-				UIImage *image = [[UIImage alloc] initWithData:imageData];
-				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
-			}
-		}];
-	});
-#else
+- (IBAction)snapStillImage: (id)sender {
+//	dispatch_async([self sessionQueue], ^{
+//		// Update the orientation on the still image output video connection before capturing.
+//		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
+//
+//		// Flash set to Auto for Still Capture
+//		[AVCamViewController setFlashMode:AVCaptureFlashModeAuto forDevice:[[self videoDeviceInput] device]];
+//
+//		// Capture a still image.
+//		[[self stillImageOutput] captureStillImageAsynchronouslyFromConnection:[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
+//
+//			if (imageDataSampleBuffer)
+//			{
+//				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
+//				UIImage *image = [[UIImage alloc] initWithData:imageData];
+//				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+//			}
+//		}];
+//	});
+
   // Email Subject
-  NSString *emailTitle = @"Test Email";
+  NSString *emailTitle = @"Article 9";
   // Email Content
-  NSString *messageBody = @"iOS programming is so fun!";
+  NSString *messageBody = @"Thank you for sending your video message. -- Article 9 Project";
   // To address
   NSArray *toRecipents = [NSArray arrayWithObject: @"article9japan@gmail.com"];
 
@@ -421,13 +613,34 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   [mc setMessageBody: messageBody isHTML: NO];
   [mc setToRecipients: toRecipents];
 
-  [mc addAttachmentData: [NSData dataWithContentsOfURL: self.outputFileURL] // exist?
+  NSString *pathy = self.outputFileURL.path;
+  NSString *newName = [pathy stringByAppendingString: @"_compressed.mov"];
+  NSURL *newURL = [NSURL fileURLWithPath: newName];
+
+  // [self resizeVideoFrom: self.outputFileURL to: newURL];
+
+  [self convertVideoToLowQuailtyWithInputURL: self.outputFileURL
+                                   outputURL: newURL
+                                     handler: ^(AVAssetExportSession *exportSession) {
+                                       if (exportSession.status == AVAssetExportSessionStatusCompleted) {
+                                         NSLog(@"completed");
+                                       }
+                                       else {
+                                         NSLog(@"error: %@", exportSession.error);
+                                       }
+                                     }];
+
+  // wait here?
+
+  NSData *dataToSend = [NSData dataWithContentsOfURL: /* self.outputFileURL */ newURL];
+  NSLog(@"Size of data to be sent: %u", (unsigned)dataToSend.length);
+
+  [mc addAttachmentData: dataToSend
                mimeType: @"video/quicktime"
                fileName: @"Movie"];
 
   // Present mail view controller on screen
   [self presentViewController: mc animated: YES completion: NULL];
-#endif
 }
 
 - (void)mailComposeController: (MFMailComposeViewController *)controller didFinishWithResult: (MFMailComposeResult)result error: (NSError *)error
