@@ -121,16 +121,16 @@
     imagePicker.showsCameraControls = NO;
     imagePicker.cameraViewTransform = CGAffineTransformIdentity;
     
-    // not all devices have two cameras or a flash so just check here
-    if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
-        imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-        if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
-            cameraSelectionButton.alpha = 1.0;
-            showCameraSelection = YES;
-        }
-    } else {
+    //// not all devices have two cameras or a flash so just check here
+    // if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceRear] ) {
+    //    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+    //    if ( [UIImagePickerController isCameraDeviceAvailable: UIImagePickerControllerCameraDeviceFront] ) {
+    //        cameraSelectionButton.alpha = 1.0;
+    //        showCameraSelection = YES;
+    //    }
+    // } else {
         imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
-    }
+    // }
     
     if ( [UIImagePickerController isFlashAvailableForCameraDevice:imagePicker.cameraDevice] ) {
         imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
