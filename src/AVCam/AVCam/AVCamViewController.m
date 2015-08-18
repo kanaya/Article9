@@ -90,7 +90,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @implementation AVCamViewController
 
+// Thanks to http://stackoverflow.com/questions/29607943/how-to-compress-a-video-to-accurate-size-in-objective-c
+- (void)convertVideoToLowQuailtyWithInputURL: (NSURL*)inputURL outputURL: (NSURL*)outputURL handler: (void (^)(AVAssetExportSession*))handler {
+  [[NSFileManager defaultManager] removeItemAtURL: outputURL error: nil];
+  AVURLAsset *asset = [AVURLAsset URLAssetWithURL: inputURL options: nil];
 
+  AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset: asset
+                                                                         presetName: AVAssetExportPresetMediumQuality];
+  exportSession.outputURL = outputURL;
+  exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+  [exportSession exportAsynchronouslyWithCompletionHandler: ^(void) { handler(exportSession); }];
+}
+
+
+// not in use
 -(void)resizeVideoFrom: (NSURL *)src to: (NSURL *)dst {
   NSError *error = nil;
 
@@ -128,10 +141,6 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   AVAssetTrack *videoTrack = [[avAsset tracksWithMediaType: AVMediaTypeVideo] objectAtIndex: 0];
 
   videoWriterInput.transform = videoTrack.preferredTransform;
-  /*
-  NSDictionary *videoOptions = [NSDictionary dictionaryWithObject: [NSNumber numberWithInt: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange]
-                                                           forKey: (id)kCVPixelBufferPixelFormatTypeKey];
-   */
 
   NSDictionary *videoOptions = @{ (id)kCVPixelBufferPixelFormatTypeKey: [NSNumber numberWithInt: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange] };
   AVAssetReaderTrackOutput *asset_reader_output = [[AVAssetReaderTrackOutput alloc] initWithTrack: videoTrack
@@ -608,11 +617,23 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
   NSString *newName = [pathy stringByAppendingString: @"_compressed.mov"];
   NSURL *newURL = [NSURL fileURLWithPath: newName];
 
-  [self resizeVideoFrom: self.outputFileURL to: newURL];
+  // [self resizeVideoFrom: self.outputFileURL to: newURL];
+
+  [self convertVideoToLowQuailtyWithInputURL: self.outputFileURL
+                                   outputURL: newURL
+                                     handler: ^(AVAssetExportSession *exportSession) {
+                                       if (exportSession.status == AVAssetExportSessionStatusCompleted) {
+                                         NSLog(@"completed");
+                                       }
+                                       else {
+                                         NSLog(@"error: %@", exportSession.error);
+                                       }
+                                     }];
 
   // wait here?
 
-  NSData *dataToSend = [NSData dataWithContentsOfURL: newURL];
+  NSData *dataToSend = [NSData dataWithContentsOfURL: /* self.outputFileURL */ newURL];
+  NSLog(@"Size of data to be sent: %u", (unsigned)dataToSend.length);
 
   [mc addAttachmentData: dataToSend
                mimeType: @"video/quicktime"
