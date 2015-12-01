@@ -65,28 +65,55 @@
 #pragma mark -
 #pragma mark View lifecycle
 
+- (void)otherButtonPushed {}
+
 - (void)viewDidLoad {
   [super viewDidLoad];
   cameraSelectionButton.alpha = 0.0;
   flashModeButton.alpha = 0.0;
   recordIndicatorView.alpha = 0.0;
   videoQualitySelectionButton.alpha = 0.0;
-    
+
+#if 0
+  // Show alert
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle: @"使い方"
+                                                                           message: @"画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
+                                                                    preferredStyle: UIAlertControllerStyleAlert];
+  [alertController addAction: [UIAlertAction actionWithTitle: @"続ける"
+                                                       style: UIAlertActionStyleCancel
+                                                     handler: ^(UIAlertAction *action) {
+                                                       [self otherButtonPushed];
+                                                     }]];
+  [self presentViewController: alertController
+                     animated: YES
+                   completion: NULL];
+#else
+  UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"使い方"
+                                                  message: @"画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
+                                                 delegate: nil
+                                        cancelButtonTitle: nil
+                                        otherButtonTitles:@"OK", nil
+                        ];
+  [alert show];
+#endif
+
   [self createImagePicker];
-    
-  recordGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleVideoRecording)];
+  recordGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self
+                                                                    action: @selector(toggleVideoRecording)];
   recordGestureRecognizer.numberOfTapsRequired = 2;
-    
-  [cameraOverlayView addGestureRecognizer:recordGestureRecognizer];
+  [cameraOverlayView addGestureRecognizer: recordGestureRecognizer];
+}
+
+- (void)viewDidAppear: (BOOL)animated {
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    CGRect theRect = [imagePicker.view frame];
-    [cameraOverlayView setFrame:theRect];
+  CGRect theRect = [imagePicker.view frame];
+  [cameraOverlayView setFrame:theRect];
     
-    [self presentViewController:imagePicker animated:animated completion:nil];
-    imagePicker.cameraOverlayView = cameraOverlayView;
+  [self presentViewController:imagePicker animated:animated completion:nil];
+  imagePicker.cameraOverlayView = cameraOverlayView;
 }
 
 #pragma mark -
