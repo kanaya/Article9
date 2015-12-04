@@ -77,7 +77,7 @@
 #if 0
   // Show alert
   UIAlertController *alertController = [UIAlertController alertControllerWithTitle: @"使い方"
-                                                                           message: @"画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
+                                                                           message: @"憲法9条を読む一人一人の声と表情を集めます．参加する人々の声と表情をつないだたくさんの映像作品を作ります．画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
                                                                     preferredStyle: UIAlertControllerStyleAlert];
   [alertController addAction: [UIAlertAction actionWithTitle: @"続ける"
                                                        style: UIAlertActionStyleCancel
@@ -89,7 +89,7 @@
                    completion: NULL];
 #else
   UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"使い方"
-                                                  message: @"画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
+                                                  message: @"憲法9条を読む一人一人の声と表情を集めます．参加する人々の声と表情をつないだたくさんの映像作品を作ります．画面をタップしてから，憲法9条を読み上げてください．読み終わったらもう一度画面をタップしてください．動画が保存され，メール送信画面になります．送信ボタンを押すまでメールは送信されません．"
                                                  delegate: nil
                                         cancelButtonTitle: nil
                                         otherButtonTitles:@"OK", nil
